@@ -180,7 +180,7 @@ async def get_json_event_winners(eventId: int):
                 image_url = '/friends.webp'
         except:
             image_url =  '/friends.webp'
-        tickets = [await req.get_ticket(int(ticket_id)) for ticket_id in winner.tickets_ids.split(',') if ticket_id!='']
+        tickets = [await req.get_ticket(int(ticket_id)) for ticket_id in winner.tickets_ids.split(',') if ticket_id!='' and (not ticket_id.startswith("<database"))]
         
         result.append(
             {
