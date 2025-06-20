@@ -27,6 +27,29 @@ async def get_channels(eventId):
     return await server_utils.get_json_event_channels(eventId)
 
 
+
+@app.route(APP_PREFIX+'/isAdmin', methods=['POST'])
+async def make_referral():
+
+    data = await quart.request.get_json()
+
+    required_fields = {'event_id', 'user_id', 'tg_init_data'}
+    if not required_fields.issubset(data):
+        return quart.jsonify({"ok":False, "message": "Missing required fields"}), 400
+
+    event_id = data['event_id']
+    user_id = data['user_id']
+    tg_init_data = int(data['tg_init_data'])
+
+    if not server_utils.check_webapp_signature(token=bot.token, init_data=tg_init_data):
+        return quart.jsonify({"ok":False, "message": "Error Telegram Init Data"}), 400
+    
+    user = await req.get_user(int(user_id))
+    event = await req.get_event(int(event_id))
+    isAdmin = event.owner_id == user.user_id
+    return  {'ok' : isAdmin, 'isAdmin': isAdmin}, 200
+    
+
 @app.route(APP_PREFIX+'/MakeReferral', methods=['POST'])
 async def make_referral():
     data = await quart.request.get_json()
