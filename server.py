@@ -29,7 +29,7 @@ async def get_channels(eventId):
 
 
 @app.route(APP_PREFIX+'/isAdmin', methods=['POST'])
-async def make_referral():
+async def isAdmin():
 
     data = await quart.request.get_json()
 
