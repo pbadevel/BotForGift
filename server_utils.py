@@ -49,8 +49,7 @@ async def get_json_subscriptions(bot: Bot, user_tg_id: int, channels: List[Chann
                         "channelId": channel.id,
                         "image_data": image,
                         "channelName": channel.name,
-                        "channelUrl": channel.url,
-                        "isSubscribed": False
+                        "channelUrl": channel.url
                     }
                 )
             
@@ -150,7 +149,7 @@ async def get_json_event_time(eventId: int):
             "hours": 0,
             "minutes": 0,
             "seconds": date.days*24*60*60 + date.seconds,
-            "users_to_invite": event.ref_tickets_count
+            # "users_to_invite": event.ref_tickets_count
             
         }
 

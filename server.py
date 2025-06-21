@@ -143,7 +143,7 @@ async def updateUserData():
     data = await quart.request.get_json()
 
 
-    required_fields = {'username', 'user_id'}
+    required_fields = {'fullname', 'user_id'}
     if not required_fields.issubset(data):
         return quart.jsonify({"error": "Missing required fields"}), 400
 
