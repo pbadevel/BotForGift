@@ -1,4 +1,4 @@
-from models import User, Ticket, Channel, Event, async_session
+from database.models import User, Ticket, Channel, Event, async_session
 from sqlalchemy import select, update, delete
 from sqlalchemy.orm import selectinload
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
@@ -508,4 +508,4 @@ async def delete_event(event_id: int) -> bool:
 
 
 
-print(asyncio.run(get_user(1060834219)).fullname)
+# print(asyncio.run(get_user(1060834219)).fullname)
