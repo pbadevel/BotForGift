@@ -50,8 +50,9 @@ async def add_user(
         # await session.rollback()
         # print(f"Ошибка целостности: {e}")
         # Если пользователь уже существует, можно вернуть существующего
-        existing_user = await session.get(User, user_id)
-        return existing_user
+        async with async_session() as session:
+            result = await session.execute(select(User).where(User.user_id == user_id))
+            return result.scalars().first()
         
     except SQLAlchemyError as e:
         # await session.rollback()
@@ -98,6 +99,7 @@ async def update_user(user_id: int, **data) -> Optional[User]:
     except SQLAlchemyError as e:
         print(f"Error updating user: {e}")
         # await session.rollback()
+        await session.rollback()  # Важно!
         return None
 
 
@@ -404,12 +406,11 @@ async def get_event_winners(event_id: int) -> List[User]:
 async def get_event(event_id: int) -> Optional[Event]:
     try:
         async with async_session() as session:
-             result = await session.execute(
+            result = await session.execute(  
                 select(Event)
                 .where(Event.id == event_id)
-        
             )
-        return result.scalars().first()
+            return result.scalars().first()
     except SQLAlchemyError as e:
         print(f"Error getting event: {e}")
         return None

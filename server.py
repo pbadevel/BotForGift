@@ -157,6 +157,11 @@ async def updateUserData():
             username=username,
             fullname=fullname
         )
+        user = await req.update_user(
+            user_id=int(user_id),
+            username=username,
+            fullname=fullname
+        )
     except:
         user = await req.update_user(
             user_id=int(user_id),
