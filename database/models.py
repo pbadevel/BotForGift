@@ -1,6 +1,6 @@
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 from sqlalchemy.ext.asyncio import AsyncAttrs, async_sessionmaker, create_async_engine
-from sqlalchemy import ForeignKey, String, BigInteger, Boolean, DateTime, Integer, Text, func
+from sqlalchemy import ForeignKey, String, BigInteger, Boolean, DateTime, Integer, Text, func, text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import Table, Column
 
@@ -9,20 +9,29 @@ import asyncio
 from datetime import datetime
 from typing import List, Optional
 
+
+
 engine = create_async_engine(
-    url="sqlite+aiosqlite:///database/db.sqlite3",
+    "postgresql+asyncpg://rafflebot:raffle1975@localhost/raffledb",
     pool_size=20,
     max_overflow=0,
-    pool_recycle=500,
-    connect_args={"check_same_thread": False}
+    pool_recycle=500
 )
+
+
+# engine = create_async_engine(
+#     url="sqlite+aiosqlite:///database/db.sqlite3",
+#     pool_size=20,
+#     max_overflow=0,
+#     pool_recycle=500,
+#     connect_args={"check_same_thread": False}
+# )
 
 
 async_session = async_sessionmaker(engine, expire_on_commit=False)
 
 class Base(DeclarativeBase, AsyncAttrs):
     pass
-
 
 
 
@@ -98,12 +107,18 @@ class Event(Base):
     ref_tickets_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
 
 
-
-
 async def create_tables():
     async with engine.begin() as conn:
-        # await conn.run_sync(Base.metadata.drop_all)
         await conn.run_sync(Base.metadata.create_all)
 
+
+async def test_connection():
+    async with async_session() as session:
+        result = await session.execute(text("SELECT version()"))
+        print(result.scalar())
+
+
+
 if __name__ == "__main__":
+    # asyncio.run(test_connection())
     asyncio.run(create_tables())
