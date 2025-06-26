@@ -161,7 +161,7 @@ async def get_json_event(eventId: int):
     
     return { 
         "users_to_invite":event.ref_tickets_count,
-        "use_captcha": event.use_captcha
+        "use_captcha": 1 if event.use_captcha else 0
         }
 
 
